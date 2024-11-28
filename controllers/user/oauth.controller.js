@@ -39,11 +39,11 @@ exports.googleOauthRedirect = async (req, res) => {
                 },
             });
             console.log("User Info:", googleUserInfoResponse.data);
-            return res.redirect(`http://localhost:5173?login=success`);
+            return res.redirect(`http://localhost:5173/home`);
         }
-        return res.redirect(`http://localhost:5173?login=failure`);
-    } catch (error) {
-        return res.redirect(`http://localhost:5173?login=failure`);
+        return res.redirect(`http://localhost:5173/login`);
+    } catch (err) {
+        return res.redirect(`http://localhost:5173/login`);
     }
 };
 
@@ -83,10 +83,10 @@ exports.kakaoOauthRedirect = async (req, res) => {
                 },
             });
             console.log("User Info:", kakaoUserInfoResponse.data);
-            return res.redirect(`http://localhost:5173?login=success`);
+            return res.redirect(`http://localhost:5173/home`);
         }
-        return res.redirect(`http://localhost:5173?login=failure`);
-    } catch (error) {
-        return res.redirect(`http://localhost:5173?login=failure`);
+        return res.redirect(`http://localhost:5173/login`);
+    } catch (err) {
+        return res.redirect(`http://localhost:5173/login`);
     }
 };
