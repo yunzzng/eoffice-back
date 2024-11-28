@@ -9,6 +9,8 @@ const jwtMiddleware = (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
+        console.log("decoded:", decoded);
+
         next(); 
     } catch (err) {
         console.log("JWT 인증 실패:", err);
