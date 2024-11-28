@@ -1,6 +1,6 @@
 const { createMinutes } = require("../../services/meeting/minutes.service");
 
-exports.createMinutes = async (req, res) => {
+const writeMinutes = async (req, res) => {
     const { title, date, attendees, content } = req.body;
 
     if (!title || !date || !attendees || !content) {
@@ -15,3 +15,5 @@ exports.createMinutes = async (req, res) => {
         return res.status(500).json({ message: "회의록 저장 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요." });
     }
 };
+
+module.exports = writeMinutes;

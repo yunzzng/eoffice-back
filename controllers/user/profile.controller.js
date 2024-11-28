@@ -1,9 +1,11 @@
 const { updateUser } = require("../../services/user/user.service");
 const User = require("../../schemas/user.schema");
+const crypto = require('crypto');
 
-exports.updateProfile = async (req, res) => {
+const updateProfile = async (req, res) => {
     try {
-        const { _id, password } = req.body;
+        const userId = req.user._id;
+        const { password } = req.body;
         const updatedData = {};
 
         // 프로필 이미지가 업로드된 경우
@@ -14,9 +16,10 @@ exports.updateProfile = async (req, res) => {
 
         // 비밀번호 변경 요청이 있는 경우
         if (password) updatedData.password = password;
+        const hashedPassword = crypto.createHash("sha512").update(password).digest("base64");
+        updatedData.password = hashedPassword;
 
-        updatedData._id = _id; 
-        const updateSuccess = await updateUser(updatedData);
+        const updateSuccess = await updateUser({...updatedData, _id:userId});
 
         if (updateSuccess) {
             const updatedUser = await User.findById(_id, { password: 0 });
@@ -33,10 +36,12 @@ exports.updateProfile = async (req, res) => {
             });
         }
     } catch (err) {
-        console.error("프로필 업데이트 중 오류 발생:", err);
+        console.log("프로필 업데이트 중 오류 발생:", err);
         return res.status(500).json({
             isError: true,
             message: "서버 오류로 인해 프로필 업데이트를 완료하지 못했습니다.",
         });
     }
 };
+
+module.exports = updateProfile;

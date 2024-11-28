@@ -3,7 +3,7 @@ const User = require('../../schemas/user.schema');
 const jwt = require("jsonwebtoken");
 const { createUser, getUserByEmailAndPassword } = require("../../services/user/user.service");
 
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
     const { email, name, password } = req.body;
 
     if (!email || !name || !password) {
@@ -31,7 +31,7 @@ exports.signup = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
     const { email, password } = req.body;
     console.log("로그인 요청 데이터:", { email, password });
 
@@ -69,4 +69,9 @@ exports.login = async (req, res) => {
         console.log("로그인 중 오류 발생:", err);
         return res.status(500).json({ isError: true, message: "서버에 문제가 발생하였습니다." });
     }
+};
+
+module.exports = {
+    signup,
+    login,
 };

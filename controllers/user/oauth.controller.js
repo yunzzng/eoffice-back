@@ -2,13 +2,13 @@ const axios = require("axios");
 
 const { googleClientId, googleClientSecret, googleOauthRedirectUrl, kakaoApiKey, kakaoOauthRedirectUrl } = require("../../firebaseConfig");
 
-exports.googleOauth = (req, res) => {
+const googleOauth = (req, res) => {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${googleOauthRedirectUrl}&response_type=code&scope=email profile`;
     console.log("Google Auth URL:", googleAuthUrl);
     res.redirect(googleAuthUrl);
 };
 
-exports.googleOauthRedirect = async (req, res) => {
+const googleOauthRedirect = async (req, res) => {
     try {
         const { code } = req.query;
         if (!code) {
@@ -47,12 +47,12 @@ exports.googleOauthRedirect = async (req, res) => {
     }
 };
 
-exports.kakaoOauth = (req, res) => {
+const kakaoOauth = (req, res) => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoOauthRedirectUrl}&scope=profile_nickname,profile_image`;
     res.redirect(kakaoAuthUrl);
 };
 
-exports.kakaoOauthRedirect = async (req, res) => {
+const kakaoOauthRedirect = async (req, res) => {
     try {
         const { code } = req.query;
         if (!code) {
@@ -89,4 +89,11 @@ exports.kakaoOauthRedirect = async (req, res) => {
     } catch (err) {
         return res.redirect(`http://localhost:5173/login`);
     }
+};
+
+module.exports = {
+    googleOauth,
+    googleOauthRedirect,
+    kakaoOauth,
+    kakaoOauthRedirect,
 };
