@@ -28,14 +28,14 @@ const getUserByEmailAndPassword = async (data) => {
 const updateUser = async (data) => {
     try {
         console.log("userData: ", data);
-        await User.updateOne(
+        const edit = await User.updateOne(
             { _id: data._id },               
             { 
                 password: data.password,      
                 profileImage: data.profileImage 
             },
         );
-        return true;
+        return edit;
     } catch (err) {
         console.log('Error updating user:', err);
         return false;

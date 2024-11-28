@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 const updateProfile = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.id;
         const { password } = req.body;
         const updatedData = {};
 
@@ -12,17 +12,23 @@ const updateProfile = async (req, res) => {
         if (req.file) {
             const fileName = req.file.filename;
             updatedData.profileImage = `http://localhost:8080/images/${fileName}`;
+            console.log("업로드된 파일: ", req.file);
         }
 
         // 비밀번호 변경 요청이 있는 경우
-        if (password) updatedData.password = password;
-        const hashedPassword = crypto.createHash("sha512").update(password).digest("base64");
-        updatedData.password = hashedPassword;
-
-        const updateSuccess = await updateUser({...updatedData, _id:userId});
-
+        if (password) {
+            const hashedPassword = crypto.createHash("sha512").update(password).digest("base64");
+            updatedData.password = hashedPassword;
+        } 
+        
+        const updateSuccess = await updateUser(updatedData);
+        
         if (updateSuccess) {
-            const updatedUser = await User.findById(_id, { password: 0 });
+            const updatedUser = await User.findByIdAndUpdate(userId, updatedData);
+            if(!updatedUser) {
+                return null;
+            }
+            console.log("업데이트 유저: ", updatedUser);
 
             return res.status(200).json({
                 isError: false,
