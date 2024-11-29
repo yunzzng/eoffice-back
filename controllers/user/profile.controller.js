@@ -28,9 +28,7 @@ const updateProfile = async (req, res) => {
         if (updateSuccess) {
             const updatedUser = await User.findByIdAndUpdate(userId, updatedData,  {returnNewDocument : true });
             // findByIdAndUpdate: 일치하는 문서를 찾고, 옵션을 전달하여 업데이트 함
-            // if(!updatedUser) {
-            //     return null;
-            // }
+
             console.log("업데이트 유저: ", updatedUser);
 
             return res.status(200).json({
