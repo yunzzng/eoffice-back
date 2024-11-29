@@ -3,7 +3,7 @@ const { createMinutes, getMinutes } = require("../../services/meeting/minutes.se
 const writeMinutes = async (req, res) => {
     const { title, date, attendees, content } = req.body;
 
-    if (!data.title || !data.date || !data.attendees || !data.content) {
+    if (!title || !date || !attendees || !content) {
         return res.status(400).json({ isError: true, message: "필수 입력 항목이 모두 채워져야 합니다."});
       }
 

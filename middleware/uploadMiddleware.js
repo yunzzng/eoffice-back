@@ -12,7 +12,7 @@ const uploadMiddleware = multer({
         destination: (req, file, done) => {
             // 어디에 파일을 저장할건지
             const rootPath = process.cwd(); // Current Working Directory
-            return done(null, path.join(rootPath, "public", "images"));
+            return done(null, path.join(rootPath, "images"));
         },
     }),
 });
