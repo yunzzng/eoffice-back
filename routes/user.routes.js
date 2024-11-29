@@ -15,4 +15,3 @@ router.post("/update", jwtMiddleware, uploadMiddleware.single("profileImage"), u
 router.get("/profile", jwtMiddleware, getProfile); // /api/user/profile
 
 module.exports = router;
-

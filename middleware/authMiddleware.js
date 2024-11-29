@@ -8,10 +8,10 @@ const jwtMiddleware = (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
         console.log("decoded:", decoded);
-
+        req.user = decoded;
         next(); 
+
     } catch (err) {
         console.log("JWT 인증 실패:", err);
         return res.status(401).json({ isError: true, message: "유효하지 않은 토큰입니다." });
