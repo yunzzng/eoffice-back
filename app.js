@@ -13,6 +13,7 @@ const app = express();
 // }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 // 라우터
 app.use("/api/user", userRoutes);

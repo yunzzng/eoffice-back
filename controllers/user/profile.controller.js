@@ -11,8 +11,10 @@ const updateProfile = async (req, res) => {
         // 프로필 이미지가 업로드된 경우
         if (req.file) {
             const fileName = req.file.filename;
-            updatedData.profileImage = `http://localhost:8080/images/${fileName}`;
+            updatedData.profileImage = `http://localhost:8080/images/${fileName}`; 
             console.log("업로드된 파일: ", req.file);
+        } else {
+            console.log("파일 업로드 실패");
         }
 
         // 비밀번호 변경 요청이 있는 경우
@@ -24,10 +26,11 @@ const updateProfile = async (req, res) => {
         const updateSuccess = await updateUser(updatedData);
         
         if (updateSuccess) {
-            const updatedUser = await User.findByIdAndUpdate(userId, updatedData);
-            if(!updatedUser) {
-                return null;
-            }
+            const updatedUser = await User.findByIdAndUpdate(userId, updatedData,  {returnNewDocument : true });
+            // findByIdAndUpdate: 일치하는 문서를 찾고, 옵션을 전달하여 업데이트 함
+            // if(!updatedUser) {
+            //     return null;
+            // }
             console.log("업데이트 유저: ", updatedUser);
 
             return res.status(200).json({
