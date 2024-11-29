@@ -11,7 +11,7 @@ const updateProfile = async (req, res) => {
         // 프로필 이미지가 업로드된 경우
         if (req.file) {
             const fileName = req.file.filename;
-            updatedData.profileImage = `http://localhost:8080/images/${fileName}`; 
+            updatedData.profileImage = `/images/${fileName}`; 
             console.log("업로드된 파일: ", req.file);
         } else {
             console.log("파일 업로드 실패");
