@@ -1,4 +1,4 @@
-const { createMeetingRoom, getMeetingRoomList } = require("../../services/meeting/meeting.service");
+const { createMeetingRoom, getMeetingRoomList, updateMeetingRoom, deleteMeetingRoom  } = require("../../services/meeting/meeting.service");
 
 // 회의실 등록
 const addMeetingRoom = async (req, res) => {
@@ -39,7 +39,52 @@ const getMeetingRooms = async (req, res) => {
     }
 };
 
+// 회의실 수정
+const editMeetingRoom = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, location, person } = req.body; 
+        const updatedData = { name, location, person };
+
+        if (req.file) {
+            const fileName = req.file.filename; 
+            updatedData.file = `/images/${fileName}`;
+        }
+
+        if (!name || !location || !person) {
+            return res.status(400).json({ isError: true, message: "모든 필드를 입력해주세요." });
+        }
+
+        const updatedRoom = await updateMeetingRoom(id, updatedData);
+
+        if (!updatedRoom) {
+            return res.status(404).json({ isError: true, message: "해당 회의실을 찾을 수 없습니다." });
+        }
+
+        return res.status(200).json({  isError: false, message: "회의실 정보가 성공적으로 수정되었습니다.",  meetingRoom: updatedRoom });
+    } catch (err) {
+        return res.status(500).json({  isError: true, message: "서버 오류로 인해 회의실 수정을 완료하지 못했습니다."});
+    }
+};
+
+// 회의실 삭제
+const removeMeetingRoom = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedRoom = await deleteMeetingRoom(id);
+
+        if (!deletedRoom) {
+            return res.status(404).json({ isError: true, message: "해당 회의실을 찾을 수 없습니다." });
+        }
+        return res.status(200).json({  isError: false,  message: "회의실이 성공적으로 삭제되었습니다.",  meetingRoom: deletedRoom  });
+    } catch (err) {
+        return res.status(500).json({  isError: true, message: "서버 오류로 인해 회의실 삭제를 완료하지 못했습니다."  });
+    }
+};
+
 module.exports = {
     addMeetingRoom,
     getMeetingRooms,
+    editMeetingRoom,
+    removeMeetingRoom,
 };

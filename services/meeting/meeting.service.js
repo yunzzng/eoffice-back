@@ -21,7 +21,27 @@ const getMeetingRoomList = async () => {
     }
 };
 
+// 회의실 수정
+const updateMeetingRoom = async (id, data) => {
+    try {
+        return await MeetingRoom.findByIdAndUpdate(id, data, { new: true });
+    } catch (err) {
+        console.logr("[updateMeetingRoom] Error:", err);
+    }
+};
+
+// 회의실 삭제
+const deleteMeetingRoom = async (id) => {
+    try{
+        return await MeetingRoom.findByIdAndDelete(id);
+    } catch (err) {
+        console.logo("[deleteMeetingRoom] Error:", err);
+    }
+};
+
 module.exports = {
     createMeetingRoom,
     getMeetingRoomList,
-}; 
+    updateMeetingRoom,
+    deleteMeetingRoom,
+};
