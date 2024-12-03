@@ -19,7 +19,7 @@ const getProfile = async (req, res) => {
             },
         });
     } catch (err) {
-        console.log(err); 
+        console.log("[getProfile] Error:", err);
         return res.status(500).json({ message: '서버 오류가 발생했습니다.', err }); 
     }
 };

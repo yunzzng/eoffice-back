@@ -26,7 +26,7 @@ const signup = async (req, res) => {
             return res.status(500).json({ isError: true, message: "사용자 생성에 실패하였습니다." });
         }
     } catch (err) {
-        console.error("회원가입 중 오류 발생:", err);
+        console.logr("[signup] Error:", err);
         return res.status(500).json({ isError: true, message: "서버에 문제가 발생하였습니다." });
     }
 };
@@ -57,7 +57,7 @@ const login = async (req, res) => {
             { expiresIn: "1h" } // 토큰 유효 기간 설정 (1시간)
         );
 
-        console.log("생성된 토큰:", token);
+        console.log("[login] 생성된 JWT 토큰:", token);
 
         return res.status(200).json({ 
             isError: false, 
@@ -66,7 +66,7 @@ const login = async (req, res) => {
             message: "로그인에 성공하였습니다."
         });
     } catch (err) {
-        console.log("로그인 중 오류 발생:", err);
+        console.log("[login] Error:", err);
         return res.status(500).json({ isError: true, message: "서버에 문제가 발생하였습니다." });
     }
 };

@@ -43,7 +43,7 @@ const updateProfile = async (req, res) => {
             });
         }
     } catch (err) {
-        console.log("프로필 업데이트 중 오류 발생:", err);
+        console.log("[updateProfile] Error:", err);
         return res.status(500).json({
             isError: true,
             message: "서버 오류로 인해 프로필 업데이트를 완료하지 못했습니다.",

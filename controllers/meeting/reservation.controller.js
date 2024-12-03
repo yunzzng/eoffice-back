@@ -39,6 +39,7 @@ const addReservation = async (req, res) => {
             },
         });
     } catch (err) {
+        console.log("[addReservation] Error:", err);
         return res.status(500).json({ isError: true, message: "서버 오류로 인해 예약 생성에 실패했습니다.",});
     }
 };
@@ -54,6 +55,7 @@ const getReservationDetails = async (req, res) => {
         }
         return res.status(200).json({ isError: false, message: "예약 정보가 성공적으로 조회되었습니다.", data: reservation, });
     } catch (err) {
+        console.log("[getReservationDetails] Error:", err);
         return res.status(500).json({ isError: true, message: "서버 오류로 인해 예약 조회에 실패했습니다.",});
     }
 };

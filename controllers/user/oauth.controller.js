@@ -43,6 +43,7 @@ const googleOauthRedirect = async (req, res) => {
         }
         return res.redirect(`http://localhost:5173/login`);
     } catch (err) {
+        console.log("[googleOauthRedirect] Error:", err);
         return res.redirect(`http://localhost:5173/login`);
     }
 };
@@ -87,6 +88,7 @@ const kakaoOauthRedirect = async (req, res) => {
         }
         return res.redirect(`http://localhost:5173/login`);
     } catch (err) {
+        console.log("[kakaoOauthRedirect] Error:", err);
         return res.redirect(`http://localhost:5173/login`);
     }
 };
