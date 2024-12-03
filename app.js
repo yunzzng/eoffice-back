@@ -5,6 +5,7 @@ const userRoutes = require("./routes/user.routes");
 const oauthRoutes = require("./routes/oauth.routes");
 const minutesRoutes = require('./routes/minutes.routes'); 
 const meetingRoutes = require('./routes/meeting.routes'); 
+const reservationsRouter = require('./routes/reservation.routes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/oauth", oauthRoutes);
 app.use("/api/meeting/minutes", minutesRoutes);
 app.use("/api/meeting/meetingrooms", meetingRoutes);
+app.use('/api/reservations', reservationsRouter);
 
 // http://localhost:8080/api/oauth/google
 
