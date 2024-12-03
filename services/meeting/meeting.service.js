@@ -21,6 +21,15 @@ const getMeetingRoomList = async () => {
     }
 };
 
+// 회의실 단일 조회
+const getMeetingRoom = async (id) => {
+    try {
+        return await MeetingRoom.findById(id); 
+    } catch (err) {
+        console.error("[getMeetingRoom] Error:", err);
+    }
+};
+
 // 회의실 수정
 const updateMeetingRoom = async (id, data) => {
     try {
@@ -42,6 +51,7 @@ const deleteMeetingRoom = async (id) => {
 module.exports = {
     createMeetingRoom,
     getMeetingRoomList,
+    getMeetingRoom,
     updateMeetingRoom,
     deleteMeetingRoom,
 };
