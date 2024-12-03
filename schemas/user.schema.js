@@ -1,30 +1,36 @@
 const mongoose = require('../db_init');
 const { String } = mongoose.Schema.Types;
 
-const userSchema = new mongoose.Schema({
+
+const userSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
-    profileImage: { 
-        type: String,
-        profileImage: String,
+    provider: {
+      type: String,
+      enum: ['email', 'google', 'kakao'],
+      required: true,
     },
-  }, {
-    timestamps: {
-        createdAt: true,
+    profileImage: {
+      type: String,
+      default: "/default_img/default_img/blank-profile.png", // 여기가 default 이미지 URL
     },
-  });
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model('users', userSchema);
 module.exports = User;
-

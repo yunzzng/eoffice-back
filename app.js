@@ -16,6 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/images",express.static("images"));
+app.use("/default_img",express.static("public"));
 
 // 라우터
 app.use("/api/user", userRoutes);

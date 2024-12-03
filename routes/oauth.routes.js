@@ -8,4 +8,6 @@ router.get("/google-redirect", googleOauthRedirect);    // /api/oauth/google-red
 router.get("/kakao", kakaoOauth);                       // /api/oauth/kakao
 router.get("/kakao-redirect", kakaoOauthRedirect);      // /api/oauth/kakao-redirect
 
+router.get("/oauthlo")
+
 module.exports = router;
