@@ -1,4 +1,4 @@
-const { Reservation, MeetingRoom } = require("../schemas/meeting.schema");
+const { Reservation, MeetingRoom } = require("../../schemas/reservation.schema");
 
 const createReservation = async (data) => {
     const { roomId, date, startTime, personCount, title } = data;
@@ -36,12 +36,14 @@ const createReservation = async (data) => {
     };
 };
 
-// 예약 목록 조회
-const getReservations = async (filters = {}) => {
-    return await Reservation.find(filters).populate("roomId", "name location file");
+// 특정 예약 조회
+const getReservationById = async (reservationId) => {
+    return await Reservation.findById(reservationId)
+        .populate("roomId", "name location")
+        .populate("userId", "name email");
 };
 
 module.exports = {
-    createReservation,
-    getReservations,
+    createReservation ,
+    getReservationById,
 };
