@@ -1,6 +1,6 @@
 require("./db_init"); 
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 const userRoutes = require("./routes/user.routes");
 const oauthRoutes = require("./routes/oauth.routes");
 const minutesRoutes = require('./routes/minutes.routes'); 
@@ -10,9 +10,9 @@ const reservationsRouter = require('./routes/reservation.routes');
 const app = express();
 
 // 미들웨어
-// app.use(cors({
-//     origin: "http://localhost:5173"
-// }));
+app.use(cors({
+    origin: "http://localhost:5173"
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/images",express.static("images"));

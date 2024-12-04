@@ -23,7 +23,7 @@ const updateProfile = async (req, res) => {
     }
 
     // 사용자 정보 업데이트
-    const updateSuccess = await updateUser(userId, updatedData);
+    const updateSuccess = await updateUser({userId, updatedData});
 
     if (!updateSuccess) {
       return res.status(400).json({

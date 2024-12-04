@@ -18,34 +18,51 @@ const getMeetingRoomList = async () => {
     return meetingRooms;
   } catch (err) {
     console.error('[getMeetingRoomList] Error:', err);
-    throw new Error('회의실 가져오기를 실패했습니다.', { cause: err }); // 나머지도 작성해주세요.
+    throw new Error('회의실 목록 조회에 실패했습니다.', { cause: err });
   }
 };
 
 // 회의실 단일 조회
 const getMeetingRoom = async (id) => {
   try {
-    return await MeetingRoom.findById(id).lean();
+    const meetingRoom = await MeetingRoom.findById(id).lean();
+    if (!meetingRoom) {
+      throw new Error('해당 ID의 회의실이 존재하지 않습니다.');
+    }
+    return meetingRoom;
   } catch (err) {
     console.error('[getMeetingRoom] Error:', err);
+    throw new Error('회의실 조회에 실패했습니다.', { cause: err });
   }
 };
 
 // 회의실 수정
 const updateMeetingRoom = async (id, data) => {
   try {
-    return await MeetingRoom.findByIdAndUpdate(id, data, { new: true }).lean();
+    const updatedMeetingRoom = await MeetingRoom.findByIdAndUpdate(id, data, {
+      new: true,
+    }).lean();
+    if (!updatedMeetingRoom) {
+      throw new Error('해당 ID의 회의실을 찾을 수 없습니다.');
+    }
+    return updatedMeetingRoom;
   } catch (err) {
     console.error('[updateMeetingRoom] Error:', err);
+    throw new Error('회의실 수정에 실패했습니다.', { cause: err });
   }
 };
 
 // 회의실 삭제
 const deleteMeetingRoom = async (id) => {
   try {
-    return await MeetingRoom.findByIdAndDelete(id).lean();
+    const deletedMeetingRoom = await MeetingRoom.findByIdAndDelete(id).lean();
+    if (!deletedMeetingRoom) {
+      throw new Error('해당 ID의 회의실을 찾을 수 없습니다.');
+    }
+    return deletedMeetingRoom;
   } catch (err) {
     console.error('[deleteMeetingRoom] Error:', err);
+    throw new Error('회의실 삭제에 실패했습니다.', { cause: err });
   }
 };
 
