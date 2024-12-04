@@ -2,6 +2,7 @@ const axios = require('axios');
 const {
     createUser,
     getUserByEmail,
+    getUserByName,
 } = require('../../services/user/user.service');
 const jwt = require('jsonwebtoken');
 const {
@@ -81,12 +82,6 @@ const googleOauthRedirect = async (req, res) => {
             { expiresIn: '1h' } // 토큰 유효 기간 설정 (1시간)
         );
         console.log('Generated JWT:', token); // JWT 출력
-        // return res.json({
-        //     isError: false,
-        //     user: { id: newUser._id, email: newUser.email, name: newUser.name },
-        //     token,
-        //     message: '로그인에 성공하였습니다.',
-        // });
         return res.status(200).redirect(
             `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=google`
         );
@@ -99,12 +94,6 @@ const googleOauthRedirect = async (req, res) => {
         { expiresIn: '1h' } // 토큰 유효 기간 설정 (1시간)
         );
         console.log('Generated -- JWT:', token); // JWT 출력
-        // return res.json({
-        // isError: false,
-        // user: { id: user._id, email: user.email, name: user.name },
-        // token,
-        // message: '로그인에 성공하였습니다.',
-        // });
         return res.status(200).redirect(
             `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=google`
           );
@@ -116,6 +105,7 @@ const googleOauthRedirect = async (req, res) => {
     }
 };
 
+// Kakao OAuth
 const kakaoOauth = (req, res) => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoOauthRedirectUrl}&scope=profile_nickname,profile_image`;
     res.redirect(kakaoAuthUrl);
@@ -125,7 +115,7 @@ const kakaoOauth = (req, res) => {
     try {
       const { code } = req.query;
       if (!code) {
-        return res.redirect(`http://localhost:5173?login=failure`);
+        return res.redirect(`${process.env.FRONT_END_URL}/login`);
       }
   
       const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
@@ -141,11 +131,11 @@ const kakaoOauth = (req, res) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
+  
       const { access_token } = tokenResponse.data;
-      console.log('Access Token Response:', tokenResponse.data);
   
       if (!access_token) {
-        return res.redirect(`http://localhost:5173/login`);
+        return res.redirect(`${process.env.FRONT_END_URL}/login`);
       }
   
       const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
@@ -154,34 +144,44 @@ const kakaoOauth = (req, res) => {
           Authorization: `Bearer ${access_token}`,
         },
       });
-      console.log('User Info:', kakaoUserInfoResponse.data);
   
-      const { nickname } = kakaoUserInfoResponse.data.kakao_account.profile; 
+      const { nickname } = kakaoUserInfoResponse.data.kakao_account.profile;
       const profileImage = kakaoUserInfoResponse.data.kakao_account.profile.profile_image_url;
   
-      // 데이터베이스에서 사용자 조회
       const user = await getUserByName(nickname, 'kakao');
   
       if (!user) {
-        user = await createUser({
-            name: nickname,
-            profileImage: profileImage,
-            password: '', 
-            provider: 'kakao',
-          });
+        const newUser = await createUser({
+          name: nickname,
+          profileImage: profileImage ,
+          password: '',
+          provider: 'kakao',
+        });
+  
+        const token = jwt.sign(
+          { id: newUser._id, name: newUser.name },
+          process.env.JWT_SECRET,
+          { expiresIn: '1h' }
+        );
+  
+        return res.redirect(
+          `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=kakao`
+        );
       }
   
       // JWT 생성
       const token = jwt.sign(
         { id: user._id, name: user.name },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' } // 토큰 유효 기간: 1시간
+        { expiresIn: '1h' }
       );
-      console.log('Generated JWT:', token);
-      return res.redirect(`http://localhost:5173/home?token=${token}`);
+  
+      return res.redirect(
+        `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=kakao`
+      );
     } catch (err) {
       console.error('[kakaoOauthRedirect] Error:', err);
-      return res.redirect(`http://localhost:5173/login`);
+      res.status(500).json({ isError: true, message: '서버에 문제가 발생하였습니다.' });
     }
   };
   

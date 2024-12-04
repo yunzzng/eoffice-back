@@ -65,7 +65,7 @@ const getUserByName = async (name) => {
   try {
     const user = await User.findOne({ name }).lean();
     if (!user) {
-      return null; // 사용자가 없으면 null 반환
+      return user || null;
     }
     return user;
   } catch (err) {
