@@ -60,19 +60,7 @@ const getUserByEmailAndPassword = async ({ email, password }) => {
   }
 };
 
-// 이름으로 사용자 조회
-const getUserByName = async (name) => {
-  try {
-    const user = await User.findOne({ name }).lean();
-    if (!user) {
-      return user || null;
-    }
-    return user;
-  } catch (err) {
-    console.error('[getUserByName] Error:', err);
-    throw new Error('이름으로 사용자 조회에 실패했습니다.', { cause: err });
-  }
-};
+
 
 const updateUser = async ({ userId, updatedData: data }) => {
   try {
@@ -98,6 +86,5 @@ module.exports = {
   getUserById,
   getUserByEmail,
   getUserByEmailAndPassword,
-  getUserByName,
   updateUser,
 };

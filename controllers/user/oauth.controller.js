@@ -2,15 +2,12 @@ const axios = require('axios');
 const {
     createUser,
     getUserByEmail,
-    getUserByName,
 } = require('../../services/user/user.service');
 const jwt = require('jsonwebtoken');
 const {
     googleClientId,
     googleClientSecret,
     googleOauthRedirectUrl,
-    kakaoApiKey,
-    kakaoOauthRedirectUrl,
 } = require('../../firebaseConfig');
 
 const googleOauth = (req, res) => {
@@ -105,91 +102,8 @@ const googleOauthRedirect = async (req, res) => {
     }
 };
 
-// Kakao OAuth
-const kakaoOauth = (req, res) => {
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoOauthRedirectUrl}&scope=profile_nickname,profile_image`;
-    res.redirect(kakaoAuthUrl);
-  };
-  
-  const kakaoOauthRedirect = async (req, res) => {
-    try {
-      const { code } = req.query;
-      if (!code) {
-        return res.redirect(`${process.env.FRONT_END_URL}/login`);
-      }
-  
-      const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
-      const data = new URLSearchParams({
-        code: code,
-        client_id: kakaoApiKey,
-        redirect_uri: kakaoOauthRedirectUrl,
-        grant_type: 'authorization_code',
-      }).toString();
-  
-      const tokenResponse = await axios.post(kakaoTokenUrl, data, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-  
-      const { access_token } = tokenResponse.data;
-  
-      if (!access_token) {
-        return res.redirect(`${process.env.FRONT_END_URL}/login`);
-      }
-  
-      const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
-      const kakaoUserInfoResponse = await axios.get(kakaoUserInfoUrl, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
-  
-      const { nickname } = kakaoUserInfoResponse.data.kakao_account.profile;
-      const profileImage = kakaoUserInfoResponse.data.kakao_account.profile.profile_image_url;
-  
-      const user = await getUserByName(nickname, 'kakao');
-  
-      if (!user) {
-        const newUser = await createUser({
-          name: nickname,
-          profileImage: profileImage ,
-          password: '',
-          provider: 'kakao',
-        });
-  
-        const token = jwt.sign(
-          { id: newUser._id, name: newUser.name },
-          process.env.JWT_SECRET,
-          { expiresIn: '1h' }
-        );
-  
-        return res.redirect(
-          `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=kakao`
-        );
-      }
-  
-      // JWT 생성
-      const token = jwt.sign(
-        { id: user._id, name: user.name },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      );
-  
-      return res.redirect(
-        `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=kakao`
-      );
-    } catch (err) {
-      console.error('[kakaoOauthRedirect] Error:', err);
-      res.status(500).json({ isError: true, message: '서버에 문제가 발생하였습니다.' });
-    }
-  };
-  
-
 
 module.exports = {
   googleOauth,
   googleOauthRedirect,
-  kakaoOauth,
-  kakaoOauthRedirect,
 };
