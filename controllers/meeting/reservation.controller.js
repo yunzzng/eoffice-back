@@ -6,10 +6,10 @@ const {
 
 const addReservation = async (req, res) => {
   try {
-    const { roomId, date, startTime, personCount, title } = req.body;
+    const { roomId, date, startTime, participants, title } = req.body;
     const userId = req.user.id;
 
-    if (!roomId || !date || !startTime || !personCount || !title) {
+    if (!roomId || !date || !startTime || !participants || !title) {
       return res
         .status(400)
         .json({ isError: true, message: '모든 필드를 입력해주세요.' });
@@ -28,7 +28,7 @@ const addReservation = async (req, res) => {
       userId,
       date,
       startTime,
-      personCount,
+      participants,
       title,
     });
 

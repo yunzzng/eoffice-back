@@ -9,7 +9,7 @@ const ReservationSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: Date, required: true },
   startTime: { type: Date, required: true },
-  personCount: { type: Number, required: true },
+  participants: { type: String, required: true },
   title: { type: String, required: true },
 });
 
