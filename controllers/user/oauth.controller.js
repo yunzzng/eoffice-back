@@ -116,8 +116,6 @@ const googleOauthRedirect = async (req, res) => {
     }
 };
 
-
-
 const kakaoOauth = (req, res) => {
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoOauthRedirectUrl}&scope=profile_nickname,profile_image,email`;
     res.redirect(kakaoAuthUrl);
@@ -171,8 +169,8 @@ const kakaoOauthRedirect = async (req, res) => {
             const newUser = await createUser({
                 email: email,
                 name: nickname,
-                password: '', // 비밀번호는 OAuth 사용자이므로 빈 문자열로 설정
-                provider: 'kakao', // 공급자를 'kakao'로 설정
+                password: '', 
+                provider: 'kakao', 
             });
 
             // JWT 생성
@@ -187,7 +185,6 @@ const kakaoOauthRedirect = async (req, res) => {
             );
         }
 
-        // 이미 가입된 사용자 처리
         const token = jwt.sign(
             { id: user._id, email: user.email },
             process.env.JWT_SECRET,
