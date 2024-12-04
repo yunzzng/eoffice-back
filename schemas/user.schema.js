@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return this.provider === 'email'; // provider가 'email'일 경우에만 필수
+      },
     },
     provider: {
       type: String,
@@ -24,7 +26,7 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: "/default_img/default_img/blank-profile.png", // 여기가 default 이미지 URL
+      profileImage: "/default_img/default_img/blank-profile.png", // 여기가 default 이미지 URL
     },
   },
   {
