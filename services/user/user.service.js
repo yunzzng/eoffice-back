@@ -45,10 +45,10 @@ const getUserByEmailAndPassword = async (data) => {
   }
 };
 
-const updateUser = async (data) => {
+const updateUser = async ({ userId, updatedData: data }) => {
   try {
     const updateResult = await User.updateOne(
-      { _id: data._id },
+      { _id: userId },
       {
         password: data.password,
         profileImage: data.profileImage,
