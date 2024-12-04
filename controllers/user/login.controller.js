@@ -29,7 +29,8 @@ const signup = async (req, res) => {
       .digest('base64');
 
     // 사용자 생성
-    const newUser = await createUser({ email, name, password: hashedPassword });
+    const newUser = await createUser({ email, name, provider:'email', password: hashedPassword });
+
     if (newUser) {
       return res.status(201).json({
         isError: false,
