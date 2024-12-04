@@ -1,7 +1,6 @@
 const mongoose = require('../db_init');
 const { String } = mongoose.Schema.Types;
 
-
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -20,11 +19,11 @@ const userSchema = new mongoose.Schema(
     provider: {
       type: String,
       enum: ['email', 'google', 'kakao'],
-      required: true,
+      // required: true,
     },
     profileImage: {
       type: String,
-      profileImage: "/default_img/default_img/blank-profile.png", // 여기가 default 이미지 URL
+      default: '/default_img/default_img/blank-profile.png', // 여기가 default 이미지 URL
     },
   },
   {

@@ -5,7 +5,7 @@ const createUser = async (userData) => {
   try {
     // provider 기본값 추가
     if (!userData.provider) {
-      userData.provider = 'email'; 
+      userData.provider = 'email';
     }
 
     const document = await User.create(userData);
@@ -13,7 +13,7 @@ const createUser = async (userData) => {
     
   } catch (err) {
     console.error('[createUser] Error:', err);
-    throw new Error('사용자 생성에 실패했습니다.', { cause: err }); 
+    throw new Error('사용자 생성에 실패했습니다.', { cause: err });
   }
 };
 
@@ -26,7 +26,7 @@ const getUserById = async (id) => {
     }
     return user;
   } catch (err) {
-    console.error('[getUserById] Error:', err); 
+    console.error('[getUserById] Error:', err);
     throw new Error('사용자 조회에 실패했습니다.', { cause: err });
   }
 };
@@ -36,35 +36,34 @@ const getUserByEmail = async (email) => {
   try {
     const user = await User.findOne({ email }).lean();
     if (!user) {
-      return user || null; 
+      return user || null;
     }
     return user;
   } catch (err) {
-    console.error('[getUserByEmail] Error:', err); 
-    throw new Error('이메일로 사용자 조회에 실패했습니다.', { cause: err }); 
+    console.error('[getUserByEmail] Error:', err);
+    throw new Error('이메일로 사용자 조회에 실패했습니다.', { cause: err });
   }
 };
 
 // 이메일과 비밀번호로 사용자 조회
 const getUserByEmailAndPassword = async ({ email, password }) => {
   try {
-    const user = await User.findOne({ email, password }).lean(); 
+    const user = await User.findOne({ email, password }).lean();
     if (!user) {
       throw new Error('이메일 또는 비밀번호가 잘못되었습니다.');
     }
-    const { _id, email: userEmail, name } = user; 
+    const { _id, email: userEmail, name } = user;
     return { _id, email: userEmail, name };
   } catch (err) {
-    console.error('[getUserByEmailAndPassword] Error:', err); 
-    throw new Error('사용자 인증에 실패했습니다.', { cause: err }); 
+    console.error('[getUserByEmailAndPassword] Error:', err);
+    throw new Error('사용자 인증에 실패했습니다.', { cause: err });
   }
 };
 
-// 사용자 정보 업데이트
-const updateUser = async ({ userId, updatedData:data }) => {
+const updateUser = async ({ userId, updatedData: data }) => {
   try {
     const updateResult = await User.updateOne(
-      { _id:userId },
+      { _id: userId },
       {
         password: data.password,
         profileImage: data.profileImage,
@@ -75,8 +74,8 @@ const updateUser = async ({ userId, updatedData:data }) => {
     }
     return updateResult;
   } catch (err) {
-    console.error('[updateUser] Error:', err); 
-    throw new Error('사용자 업데이트에 실패했습니다.', { cause: err }); 
+    console.error('[updateUser] Error:', err);
+    throw new Error('사용자 업데이트에 실패했습니다.', { cause: err });
   }
 };
 
