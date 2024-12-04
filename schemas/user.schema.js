@@ -15,9 +15,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: function () {
-        return this.provider === 'email'; // provider가 'email'일 경우에만 필수
-      },
+      required: true,
     },
     provider: {
       type: String,

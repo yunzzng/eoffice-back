@@ -6,6 +6,7 @@ const oauthRoutes = require("./routes/oauth.routes");
 const minutesRoutes = require('./routes/minutes.routes'); 
 const meetingRoutes = require('./routes/meeting.routes'); 
 const reservationsRouter = require('./routes/reservation.routes');
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/images",express.static("images"));
 app.use("/default_img",express.static("public"));
 

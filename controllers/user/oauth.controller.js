@@ -27,6 +27,7 @@ const googleOauth = (req, res) => {
 const googleOauthRedirect = async (req, res) => {
   try {
     const { code } = req.query;
+    console.log(code);
     if (!code) {
         return res.redirect(`${process.env.FRONT_END_URL}/login`);
     }
@@ -79,12 +80,16 @@ const googleOauthRedirect = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '1h' } // 토큰 유효 기간 설정 (1시간)
         );
-        return res.json({
-            isError: false,
-            user: { id: newUser._id, email: newUser.email, name: newUser.name },
-            token,
-            message: '로그인에 성공하였습니다.',
-        });
+        console.log('Generated JWT:', token); // JWT 출력
+        // return res.json({
+        //     isError: false,
+        //     user: { id: newUser._id, email: newUser.email, name: newUser.name },
+        //     token,
+        //     message: '로그인에 성공하였습니다.',
+        // });
+        return res.status(200).redirect(
+            `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=google`
+        );
     }
 
     // JWT 생성
@@ -93,12 +98,16 @@ const googleOauthRedirect = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '1h' } // 토큰 유효 기간 설정 (1시간)
         );
-        return res.status(200)({
-        isError: false,
-        user: { id: user._id, email: user.email, name: user.name },
-        token,
-        message: '로그인에 성공하였습니다.',
-        });
+        console.log('Generated -- JWT:', token); // JWT 출력
+        // return res.json({
+        // isError: false,
+        // user: { id: user._id, email: user.email, name: user.name },
+        // token,
+        // message: '로그인에 성공하였습니다.',
+        // });
+        return res.status(200).redirect(
+            `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=google`
+          );
     } catch (err) {
         console.error('[googleOauthRedirect] Error:', err);
         res
@@ -107,91 +116,95 @@ const googleOauthRedirect = async (req, res) => {
     }
 };
 
+
+
 const kakaoOauth = (req, res) => {
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoOauthRedirectUrl}&scope=profile_nickname,profile_image`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoApiKey}&redirect_uri=${kakaoOauthRedirectUrl}&scope=profile_nickname,profile_image,email`;
     res.redirect(kakaoAuthUrl);
 };
 
 const kakaoOauthRedirect = async (req, res) => {
-  try {
-    const { code } = req.query;
-    if (!code) {
-        return res.redirect(`${process.env.FRONT_END_URL}/login`);
-    }
+    try {
+        const { code } = req.query;
+        if (!code) {
+            return res.redirect(`${process.env.FRONT_END_URL}/login`);
+        }
 
-    const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
-    const data = new URLSearchParams({
-        code: code,
-        client_id: kakaoApiKey,
-        redirect_uri: kakaoOauthRedirectUrl,
-        grant_type: 'authorization_code',
-    }).toString();
+        const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
+        const data = new URLSearchParams({
+            code: code,
+            client_id: kakaoApiKey,
+            redirect_uri: kakaoOauthRedirectUrl,
+            grant_type: 'authorization_code',
+        }).toString();
 
-    const tokenResponse = await axios.post(kakaoTokenUrl, data, {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    });
-    const { access_token } = tokenResponse.data;
-    if (!access_token) {
-        return res.status(400).json({
-            isError: true,
-            message: 'Access Token을 받아오지 못했습니다.',
+        // Access Token 요청
+        const tokenResponse = await axios.post(kakaoTokenUrl, data, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
         });
-      }
-  
+        const { access_token } = tokenResponse.data;
+
+        if (!access_token) {
+            return res.status(400).json({
+                isError: true,
+                message: 'Access Token을 받아오지 못했습니다.',
+            });
+        }
+
+        // 사용자 정보 요청
         const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
         const kakaoUserInfoResponse = await axios.get(kakaoUserInfoUrl, {
             headers: { Authorization: `Bearer ${access_token}` },
         });
-  
-        const kakaoAccount = kakaoUserInfoResponse.data.kakao_account;
-        const email = kakaoAccount.email;
-        const nickname = kakaoAccount.profile.nickname;
-    
+
+        // 사용자 정보 추출
+        const { email, profile } = kakaoUserInfoResponse.data.kakao_account;
+        const { nickname } = profile;
+
+        // 사용자 조회
         const user = await getUserByEmail(email);
-  
-      if (!user) {
-        const newUser = await createUser({
-          email,
-          name: nickname,
-          password: '',
-          provider: 'kakao',
-        });
-  
+
+        // 회원 가입
+        if (!user) {
+            const newUser = await createUser({
+                email: email,
+                name: nickname,
+                password: '', // 비밀번호는 OAuth 사용자이므로 빈 문자열로 설정
+                provider: 'kakao', // 공급자를 'kakao'로 설정
+            });
+
+            // JWT 생성
+            const token = jwt.sign(
+                { id: newUser._id, email: newUser.email },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' } // 토큰 유효 기간: 1시간
+            );
+
+            return res.status(200).redirect(
+                `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=kakao`
+            );
+        }
+
+        // 이미 가입된 사용자 처리
         const token = jwt.sign(
-          { id: newUser._id, email: newUser.email },
-          process.env.JWT_SECRET,
-          { expiresIn: '1h' }
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } // 토큰 유효 기간: 1시간
         );
-  
-        return res.json({
-            isError: false,
-            user: { id: newUser._id, email: newUser.email, name: newUser.name },
-            token,
-            message: '회원가입 및 로그인이 완료되었습니다.',
-        });
-      }
-  
-      const token = jwt.sign(
-        { id: user._id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      );
-  
-      return res.json({
-        isError: false,
-        user: { id: user._id, email: user.email, name: user.name },
-        token,
-        message: '로그인에 성공하였습니다.',
-      });
+
+        return res.status(200).redirect(
+            `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=kakao`
+        );
     } catch (err) {
-      console.error('[kakaoOauthRedirect] Error:', err);
-      res
-        .status(500)
-        .json({ isError: true, message: '서버에 문제가 발생하였습니다.' });
+        console.error('[kakaoOauthRedirect] Error:', err);
+        res.status(500).json({
+            isError: true,
+            message: '서버에 문제가 발생하였습니다.',
+        });
     }
-  };
+};
 
 module.exports = {
   googleOauth,

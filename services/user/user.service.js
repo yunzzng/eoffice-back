@@ -10,6 +10,7 @@ const createUser = async (userData) => {
 
     const document = await User.create(userData);
     return document.toObject();
+    
   } catch (err) {
     console.error('[createUser] Error:', err);
     throw new Error('사용자 생성에 실패했습니다.', { cause: err }); 
