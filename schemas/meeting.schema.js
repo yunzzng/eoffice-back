@@ -4,7 +4,7 @@ const MeetingRoomSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     location: { type: String, required: true },
-    person: { type: Number, required: true },
+    personCount: { type: Number, required: true },
     file: { type: String, required: true },
   },
   {

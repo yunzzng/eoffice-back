@@ -11,11 +11,7 @@ const userProfile = async (req, res) => {
 
     return res.status(200).json({
       message: '유저 정보를 성공적으로 가져왔습니다.',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
+      user
     });
   } catch (err) {
     console.error('[getProfile] Error:', err);

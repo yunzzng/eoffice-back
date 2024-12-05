@@ -6,9 +6,10 @@ const {
   // 예약 생성
   const createReservation = async ({
     roomId,
+    userId,
     date,
     startTime,
-    personCount,
+    participants,
     title,
   }) => {
     try {
@@ -19,9 +20,10 @@ const {
   
       const newReservation = new Reservation({
         roomId,
+        userId,
         date,
         startTime,
-        personCount,
+        participants,
         title,
       });
   

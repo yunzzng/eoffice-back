@@ -9,8 +9,8 @@ const {
   // 회의실 등록
   const addMeetingRoom = async (req, res) => {
     try {
-      const { name, location, person } = req.body;
-      const updatedData = { name, location, person: Number(person) };
+      const { name, location, personCount } = req.body;
+      const updatedData = { name, location, personCount: Number(personCount) };
   
       if (!req.file) {
         return res
@@ -21,7 +21,7 @@ const {
       const fileName = req.file.filename;
       updatedData.file = `/images/${fileName}`;
   
-      if (!name || !location || !person) {
+      if (!name || !location || !personCount) {
         return res
           .status(400)
           .json({ isError: true, message: '모든 필드를 입력해주세요.' });
@@ -45,6 +45,7 @@ const {
   // 회의실 조회
   const getMeetingRooms = async (req, res) => {
     try {
+      const { id } = req.params; 
       const meetingRooms = await getMeetingRoomList();
       if (!meetingRooms || meetingRooms.length === 0) {
         return res
@@ -88,14 +89,14 @@ const {
   const editMeetingRoom = async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, location, person } = req.body;
-      const updatedData = { name, location, person };
+      const { name, location, personCount } = req.body;
+      const updatedData = { name, location, personCount: Number(personCount) };
   
       if (req.file) {
         const fileName = req.file.filename;
         updatedData.file = `/images/${fileName}`;
       }
-      if (!name || !location || !person) {
+      if (!name || !location || !personCount) {
         return res
           .status(400)
           .json({ isError: true, message: '모든 필드를 입력해주세요.' });
