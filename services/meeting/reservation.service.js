@@ -1,4 +1,4 @@
-const { Reservation,MeetingRoom,} = require('../../schemas/reservation.schema');
+const  Reservation  = require('../../schemas/reservation.schema');
 const moment = require('moment');
   
   // 예약 생성
