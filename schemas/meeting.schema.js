@@ -6,10 +6,8 @@ const MeetingRoomSchema = new mongoose.Schema(
     location: { type: String, required: true },
     personCount: { type: Number, required: true },
     file: { type: String, required: true },
+    createdAt: { type: String, default: Date.now },
   },
-  {
-    timestamps: true,
-  }
 );
 
 module.exports = mongoose.model('meetingrooms', MeetingRoomSchema);

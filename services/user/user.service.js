@@ -1,19 +1,18 @@
 const User = require('../../schemas/user.schema');
+const moment = require('moment');
 
 // 사용자 생성
-const createUser = async (userData) => {
+const createUser = async (data) => {
   try {
-    // provider 기본값 추가
-    if (!userData.provider) {
-      userData.provider = 'email';
-    }
+    const date = moment().format('YYYY-MM-DD HH:mm:ss');
+    const userData = {...data, provider: data.provider || 'email', createdAt: date,};
 
+    // User 생성
     const document = await User.create(userData);
     return document.toObject();
-    
   } catch (err) {
     console.error('[createUser] Error:', err);
-    throw new Error('사용자 생성에 실패했습니다.', { cause: err });
+    throw new Error('사용자 생성에 실패했습니다.');
   }
 };
 

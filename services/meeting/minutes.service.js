@@ -1,9 +1,12 @@
 const Minutes = require('../../schemas/minutes.schema');
+const moment = require('moment');
 
 // 회의록 생성
 const createMinutes = async (data) => {
   try {
-    const document = await Minutes.create(data);
+    const date = moment().format('YYYY-MM-DD HH:mm:ss');
+    const MinutesData = {...data, createdAt: date};
+    const document = await Minutes.create(MinutesData);
     return document.toObject();
   } catch (err) {
     console.error('[createMinutes] Error:', err);

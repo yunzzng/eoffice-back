@@ -1,47 +1,13 @@
-const {
-    Reservation,
-    MeetingRoom,
-  } = require('../../schemas/reservation.schema');
+const { Reservation,MeetingRoom,} = require('../../schemas/reservation.schema');
+const moment = require('moment');
   
   // 예약 생성
-  const createReservation = async ({
-    roomId,
-    userId,
-    date,
-    startTime,
-    participants,
-    title,
-  }) => {
+  const createReservation = async (data) => {
     try {
-      const meetingRoom = await MeetingRoom.findById(roomId).lean();
-      if (!meetingRoom) {
-        throw new Error('해당 회의실을 찾을 수 없습니다.');
-      }
-  
-      const newReservation = new Reservation({
-        roomId,
-        userId,
-        date,
-        startTime,
-        participants,
-        title,
-      });
-  
-      // 데이터베이스에 저장
-      const savedReservation = await newReservation.save();
-  
-      return {
-        isError: false,
-        message: '예약이 성공적으로 생성되었습니다.',
-        data: {
-          reservation: savedReservation,
-          meetingRoom: {
-            name: meetingRoom.name,
-            location: meetingRoom.location,
-            file: meetingRoom.file,
-          },
-        },
-      };
+      const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+      const reservationData = { ...data, createdAt };
+      const newReservation = await Reservation.create(reservationData);
+      return newReservation.toObject();
     } catch (err) {
       console.error('[createReservation] Error:', err);
       throw new Error('예약 생성에 실패했습니다.', { cause: err });

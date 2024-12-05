@@ -1,9 +1,12 @@
 const MeetingRoom = require('../../schemas/meeting.schema');
+const moment = require('moment');
 
 // 회의실 생성
 const createMeetingRoom = async (data) => {
   try {
-    const meetingRoom = await MeetingRoom.create(data);
+    const date = moment().format('YYYY-MM-DD HH:mm:ss');
+    const meetingRoomData = {...data, createdAt: date};
+    const meetingRoom = await MeetingRoom.create(meetingRoomData);
     return meetingRoom;
   } catch (err) {
     console.error('[createMeetingRoom] Error:', err);

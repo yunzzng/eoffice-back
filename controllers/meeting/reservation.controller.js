@@ -23,14 +23,7 @@ const addReservation = async (req, res) => {
         .json({ isError: true, message: '해당 회의실을 찾을 수 없습니다.' });
     }
 
-    const newReservation = await createReservation({
-      roomId,
-      userId,
-      date,
-      startTime,
-      participants,
-      title,
-    });
+    const newReservation = await createReservation({roomId, userId, date, startTime, participants, title, });
 
     return res.status(201).json({
       isError: false,

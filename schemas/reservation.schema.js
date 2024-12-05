@@ -7,10 +7,11 @@ const ReservationSchema = new mongoose.Schema({
     required: true,
   },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  date: { type: Date, required: true },
-  startTime: { type: Date, required: true },
+  date: { type: String, required: true },
+  startTime: { type: String, required: true },
   participants: { type: String, required: true },
   title: { type: String, required: true },
+  createdAt: { type: String, default: Date.now },
 });
 
 module.exports = mongoose.model('reservation', ReservationSchema);
