@@ -68,8 +68,9 @@ const googleOauthRedirect = async (req, res) => {
             // 구글에서 가져온 값으로 변경해주세요.
             email: googleUserInfoResponse.data.email,
             name: googleUserInfoResponse.data.name,
-            password: '',
             provider: 'google',
+            password: '',
+            profileImage: '/default_img/default_img/blank-profile.png',
         });
 
         // JWT 생성
