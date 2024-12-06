@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: '/default_img/default_img/blank-profile.png', // 여기가 default 이미지 URL
+      default: '/default_img/blank-profile.png', // 여기가 default 이미지 URL
     },
     createdAt: { type: String, default: Date.now },
   },
