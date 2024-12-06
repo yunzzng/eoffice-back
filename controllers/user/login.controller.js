@@ -75,6 +75,12 @@ const login = async (req, res) => {
         .json({ isError: true, message: '사용자를 찾을 수 없습니다.' });
     }
 
+    if (email !== user.email && password !== user.password){
+      return res
+        .status(401)
+        .json({isError: true, message: '이메일 또는 비밀번호가 일치하지 않습니다.'})
+    }
+
     // JWT 생성
     const token = jwt.sign(
       { id: user._id, email: user.email },
