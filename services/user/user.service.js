@@ -59,8 +59,7 @@ const getUserByEmailAndPassword = async ({ email, password }) => {
   }
 };
 
-
-
+// 프로필 수정
 const updateUser = async ({ userId, updatedData: data }) => {
   try {
     const updateResult = await User.updateOne(
