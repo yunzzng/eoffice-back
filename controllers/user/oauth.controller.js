@@ -70,7 +70,7 @@ const googleOauthRedirect = async (req, res) => {
             name: googleUserInfoResponse.data.name,
             provider: 'google',
             password: '',
-            profileImage: '/default_img/default_img/blank-profile.png',
+            profileImage: '/default_img/blank-profile.png',
         });
 
         // JWT 생성
