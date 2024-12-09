@@ -9,7 +9,6 @@ const addReservation = async (req, res) => {
     const { roomId, date, startTime, participants, title } = req.body;
     const userId = req.user.id;
 
-    console.log(req.body)
     if (!roomId || !date || !startTime || !participants || !title) {
       return res
         .status(400)

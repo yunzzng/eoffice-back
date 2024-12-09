@@ -13,7 +13,6 @@ const jwtMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    console.log('JWT 인증 실패:', err);
     return res
       .status(401)
       .json({ isError: true, message: '유효하지 않은 토큰입니다.' });

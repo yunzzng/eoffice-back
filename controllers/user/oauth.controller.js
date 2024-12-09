@@ -25,7 +25,6 @@ const googleOauth = (req, res) => {
 const googleOauthRedirect = async (req, res) => {
   try {
     const { code } = req.query;
-    console.log(code);
     if (!code) {
         return res.redirect(`${process.env.FRONT_END_URL}/login`);
     }
@@ -79,7 +78,6 @@ const googleOauthRedirect = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '1h' } // 토큰 유효 기간 설정 (1시간)
         );
-        console.log('Generated JWT:', token); // JWT 출력
         return res.status(200).redirect(
             `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=google`
         );
@@ -91,7 +89,6 @@ const googleOauthRedirect = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: '1h' } // 토큰 유효 기간 설정 (1시간)
         );
-        console.log('Generated -- JWT:', token); // JWT 출력
         return res.status(200).redirect(
             `${process.env.FRONT_END_URL}/oauthloading?token=${token}&provider=google`
           );
