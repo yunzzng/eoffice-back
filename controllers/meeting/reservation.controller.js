@@ -1,4 +1,4 @@
-const { getMeetingRoom } = require('../../services/meeting/meeting.service');
+const { getMeetingRoom, updateMeetingRoom } = require('../../services/meeting/meeting.service');
 const {
   getReservationById,
   createReservation,
@@ -24,7 +24,13 @@ const addReservation = async (req, res) => {
         .json({ isError: true, message: '해당 회의실을 찾을 수 없습니다.' });
     }
 
+    if (meetingRoom.status === 'reserved'){
+      return res.status(400).json({ isError: true, message: '이미 예약된 회의실 입니다.' })
+    }
+
     const newReservation = await createReservation({roomId, userId, date, startTime, participants, title, });
+
+    await updateMeetingRoom (roomId, { status: 'reserved'});
 
     return res.status(201).json({
       isError: false,

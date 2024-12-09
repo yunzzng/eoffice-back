@@ -6,6 +6,7 @@ const MeetingRoomSchema = new mongoose.Schema(
     location: { type: String, required: true },
     personCount: { type: Number, required: true },
     file: { type: String, required: true },
+    status: { type: String, default: 'available'},
     createdAt: { type: String, default: Date.now },
   },
 );
