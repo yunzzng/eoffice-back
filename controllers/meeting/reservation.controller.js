@@ -28,15 +28,15 @@ const addReservation = async (req, res) => {
       return res.status(400).json({ isError: true, message: '이미 예약된 회의실 입니다.' })
     }
 
-    const newReservation = await createReservation({roomId, userId, date, startTime, participants, title, });
-
-    await updateMeetingRoom (roomId, { status: 'reserved'});
+    const updatedRoom = await updateMeetingRoom (roomId, { status: 'reserved'});
+    const newReservation = await createReservation({roomId, userId, date, startTime, participants, title });
 
     return res.status(201).json({
       isError: false,
       message: '예약이 성공적으로 생성되었습니다.',
       data: {
         reservation: newReservation,
+        meetingRoom: updatedRoom,
       },
     });
   } catch (err) {

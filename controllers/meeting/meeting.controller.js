@@ -75,7 +75,13 @@ const {
           .status(404)
           .json({ isError: true, message: '해당 회의실을 찾을 수 없습니다.' });
       }
-      return res.status(200).json({ isError: false, data: meetingRoom });
+      const reponseData = {
+        id: meetingRoom.id,
+        name: meetingRoom.name,
+        location: meetingRoom.location,
+        status: meetingRoom.status,
+      }
+      return res.status(200).json({ isError: false, data: reponseData });
     } catch (err) {
       console.error('[getMeetingRoomById] Error:', err);
       return res.status(500).json({
