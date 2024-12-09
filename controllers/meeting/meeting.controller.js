@@ -79,6 +79,7 @@ const {
         id: meetingRoom.id,
         name: meetingRoom.name,
         location: meetingRoom.location,
+        file: meetingRoom.file,
         status: meetingRoom.status,
       }
       return res.status(200).json({ isError: false, data: reponseData });
