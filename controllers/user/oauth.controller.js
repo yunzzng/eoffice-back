@@ -20,7 +20,7 @@ const googleOauth = (req, res) => {
 // ### 아래부터는 구현이 되어있음
 // access token을 사용해서 google user info를 받아옴
 // 받아온 user info를 이용하여 로그인 또는 회원가입 로직을 수행
-// 로그인 또는 회원가입이 성공하면 front에게 JWT 토큰을 발급.
+// 로그인 또는 회원가입이 성공하면 front에게 JWT 토큰을 발급
 
 const googleOauthRedirect = async (req, res) => {
   try {
